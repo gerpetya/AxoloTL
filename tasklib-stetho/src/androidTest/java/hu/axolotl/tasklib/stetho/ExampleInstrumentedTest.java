@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("hu.axolotl.tasklib.stetho.test", appContext.getPackageName());
+        assertEquals("hu.autsoft.tasklibstetho.test", appContext.getPackageName());
     }
 }
