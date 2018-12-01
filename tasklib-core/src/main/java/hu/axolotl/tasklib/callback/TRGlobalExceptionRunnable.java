@@ -31,8 +31,8 @@ public class TRGlobalExceptionRunnable extends BaseTaskCallbackRunnable {
     BlockingQueue<Boolean> queue;
     GlobalError globalError;
 
-    public TRGlobalExceptionRunnable(ClassDescriptor classDescriptor, Object target, BaseTask task, GlobalError globalError, BlockingQueue<Boolean> queue) {
-        super(classDescriptor, target, task);
+    public TRGlobalExceptionRunnable(BaseTaskCallbackRunnable.Listener listener, ClassDescriptor classDescriptor, Object target, BaseTask task, GlobalError globalError, BlockingQueue<Boolean> queue) {
+        super(listener, classDescriptor, target, task);
         this.queue = queue;
         this.globalError = globalError;
     }

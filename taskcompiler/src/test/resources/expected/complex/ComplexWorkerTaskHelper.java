@@ -1,8 +1,7 @@
 package hu.axolotl.test.task;
 
-import javax.inject.Inject;
-
 import hu.axolotl.test.ComplexWorker;
+import javax.inject.Inject;
 
 public class ComplexWorkerTaskHelper {
     @Inject

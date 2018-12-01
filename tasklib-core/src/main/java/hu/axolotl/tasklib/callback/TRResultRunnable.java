@@ -23,10 +23,11 @@ import hu.axolotl.tasklib.descriptor.ResultMethodDescriptor;
 
 public class TRResultRunnable extends BaseTaskCallbackRunnable {
 
-    InlineTaskListener innerListener;
 
-    public TRResultRunnable(ClassDescriptor classDescriptor, Object target, BaseTask task, InlineTaskListener innerListener) {
-        super(classDescriptor, target, task);
+    private final InlineTaskListener innerListener;
+
+    public TRResultRunnable(BaseTaskCallbackRunnable.Listener listener, ClassDescriptor classDescriptor, Object target, BaseTask task, InlineTaskListener innerListener) {
+        super(listener, classDescriptor, target, task);
         this.innerListener = innerListener;
     }
 
@@ -43,6 +44,9 @@ public class TRResultRunnable extends BaseTaskCallbackRunnable {
             }
         } catch (InvokeException ex) {
             innerException = ex;
+        }
+        if (listener != null) {
+            listener.onTaskCallbackRunnableFinished(this);
         }
     }
 }

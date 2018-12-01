@@ -20,20 +20,17 @@ android {
 }
 
 dependencies {
-	compile fileTree(dir: 'libs', include: ['*.jar'])
-	androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-		exclude group: 'com.android.support', module: 'support-annotations'
-	})
-	compile gradle.ext.dep_appcompat
-	compile 'javax.inject:javax.inject:1'
-
-	compile gradle.ext.dep_stetho
-
-	compile project(':tasklib-core')
-	compile project(':tasklib')
-	compile project(':tasklib-stetho')
-	compile project(':tasklib')
-	annotationProcessor project(':taskcompiler')
-
-	testCompile gradle.ext.dep_junit
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile gradle.ext.dep_appcompat
+    compile 'javax.inject:javax.inject:1'
+    compile gradle.ext.dep_stetho
+    compile project(':tasklib-core')
+    compile project(':tasklib')
+    compile project(':tasklib-stetho')
+    compile project(':tasklib')
+    annotationProcessor project(':taskcompiler')
+    testCompile gradle.ext.dep_junit
 }

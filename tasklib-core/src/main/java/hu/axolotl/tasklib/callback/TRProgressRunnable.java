@@ -24,8 +24,8 @@ public class TRProgressRunnable extends BaseTaskCallbackRunnable {
 
     final Object progress;
 
-    public TRProgressRunnable(ClassDescriptor classDescriptor, Object target, BaseTask task, Object progress) {
-        super(classDescriptor, target, task);
+    public TRProgressRunnable(BaseTaskCallbackRunnable.Listener listener, ClassDescriptor classDescriptor, Object target, BaseTask task, Object progress) {
+        super(listener, classDescriptor, target, task);
         this.progress = progress;
     }
 
@@ -39,5 +39,6 @@ public class TRProgressRunnable extends BaseTaskCallbackRunnable {
                 innerException = ex;
             }
         }
+        listener.onTaskCallbackRunnableFinished(this);
     }
 }

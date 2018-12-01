@@ -36,7 +36,7 @@ import hu.axolotl.tasklib.exception.EngineRuntimeException;
 import hu.axolotl.tasklib.util.TaskGlobalUtil;
 import hu.axolotl.tasklib.util.TaskLogger;
 
-public abstract class BaseTaskEngineHolder {
+public abstract class BaseTaskEngineHolder implements BaseTaskCallbackRunnable.Listener {
 
     private static final String TAG = BaseTaskEngineHolder.class.getSimpleName();
 
@@ -51,6 +51,7 @@ public abstract class BaseTaskEngineHolder {
     private final Queue<BaseTask<?, ?>> earlyTaskQueue = new LinkedList<>();
     private final List<Class<? extends BaseTask>> followedTasks = new ArrayList<>();
     private final Map<Long, InlineTaskListener> innerListeners = new HashMap<>();
+    private final List<BaseTaskCallbackRunnable> postedRunnables = new ArrayList<>();
 
     private boolean started = false;
 
@@ -135,7 +136,7 @@ public abstract class BaseTaskEngineHolder {
             if (innerListeners.containsKey(task.getId())) {
                 innerListener = innerListeners.remove(task.getId());
             }
-            postToProperThread(new TRResultRunnable(classDescriptor, target, task, innerListener));
+            postToProperThread(new TRResultRunnable(this, classDescriptor, target, task, innerListener));
         } else {
             TaskLogger.v(TAG, getClass().getSimpleName() + ".onTRResult() - SKIPPED: " + task.getClass().getSimpleName());
         }
@@ -148,7 +149,7 @@ public abstract class BaseTaskEngineHolder {
         if (task.isRunning()) {
             if (needCall(task)) {
                 TaskLogger.d(TAG, getClass().getSimpleName() + ".onTRProgress() - task: " + task.getClass().getSimpleName());
-                postToProperThread(new TRProgressRunnable(classDescriptor, target, task, progress));
+                postToProperThread(new TRProgressRunnable(this, classDescriptor, target, task, progress));
             } else {
                 TaskLogger.v(TAG, getClass().getSimpleName() + ".onTRProgress() - SKIPPED: " + task.getClass().getSimpleName());
             }
@@ -163,7 +164,7 @@ public abstract class BaseTaskEngineHolder {
         }
         final BlockingQueue<Boolean> queue = new LinkedBlockingQueue<>(1);
         TaskLogger.v(TAG, "onTRGlobalException before postToProperThread");
-        postToProperThread(new TRGlobalExceptionRunnable(classDescriptor, target, task, globalError, queue));
+        postToProperThread(new TRGlobalExceptionRunnable(this, classDescriptor, target, task, globalError, queue));
         TaskLogger.v(TAG, "onTRGlobalException after postToProperThread");
         boolean result;
         try {
@@ -183,4 +184,15 @@ public abstract class BaseTaskEngineHolder {
         return sourceId;
     }
 
+    public int getCallbackRunnableTaskCount() {
+        return postedRunnables.size();
+    }
+
+    @Override
+    public void onTaskCallbackRunnableFinished(BaseTaskCallbackRunnable runnable) {
+        TaskEngine.TaskEngineListener taskEngineListener = TaskEngine.getInstance().getTaskEngineListener();
+        if(taskEngineListener != null) {
+            taskEngineListener.onTaskCallbackRunnableFinished();
+        }
+    }
 }

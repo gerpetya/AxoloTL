@@ -63,7 +63,12 @@ public abstract class TaskTestBase {
 
             @Override
             public void onTaskPendingFinished(BaseTask task) {
-                TestHolderUtil.getInstance().onTaskPendingFinished();
+                TestHolderUtil.getInstance().onTaskStatusUpdate();
+            }
+
+            @Override
+            public void onTaskCallbackRunnableFinished() {
+                TestHolderUtil.getInstance().onTaskStatusUpdate();
             }
 
             @Override

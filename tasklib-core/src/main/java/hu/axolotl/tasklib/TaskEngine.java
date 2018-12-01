@@ -35,6 +35,8 @@ public final class TaskEngine implements TaskSubscriber.TaskSubscriberListener {
     public interface TaskEngineListener {
         void onTaskPendingFinished(BaseTask task);
 
+        void onTaskCallbackRunnableFinished();
+
         void onTaskException(BaseTask task, Throwable throwable);
     }
 
@@ -201,8 +203,16 @@ public final class TaskEngine implements TaskSubscriber.TaskSubscriberListener {
         }
     }
 
+    public TaskEngineListener getTaskEngineListener() {
+        return taskEngineListener;
+    }
+
     public int getPendingTaskCount() {
-        return pendingTasks.size();
+        int count = pendingTasks.size();
+        for (BaseTaskEngineHolder holder : holders) {
+            count += holder.getCallbackRunnableTaskCount();
+        }
+        return count;
     }
 
 }

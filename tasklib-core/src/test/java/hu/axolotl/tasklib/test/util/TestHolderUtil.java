@@ -54,10 +54,10 @@ public class TestHolderUtil {
         }
     }
 
-    public void onTaskPendingFinished() {
+    public void onTaskStatusUpdate() {
         lock.lock();
         try {
-            UtilTestLogger.v(TAG, "onTaskPendingFinished: " + TaskEngine.getInstance().getPendingTaskCount());
+            UtilTestLogger.v(TAG, "onTaskStatusUpdate: " + TaskEngine.getInstance().getPendingTaskCount());
             if (TaskEngine.getInstance().getPendingTaskCount() == 0) {
                 empty.signal();
             }

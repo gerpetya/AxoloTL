@@ -20,12 +20,19 @@ import hu.axolotl.tasklib.descriptor.ClassDescriptor;
 
 public abstract class BaseTaskCallbackRunnable implements Runnable {
 
+    public interface Listener {
+
+        void onTaskCallbackRunnableFinished(BaseTaskCallbackRunnable runnable);
+    }
+
+    final TRResultRunnable.Listener listener;
     final ClassDescriptor classDescriptor;
     final Object target;
     final BaseTask task;
     Exception innerException = null;
 
-    public BaseTaskCallbackRunnable(ClassDescriptor classDescriptor, Object target, BaseTask task) {
+    public BaseTaskCallbackRunnable(TRResultRunnable.Listener listener, ClassDescriptor classDescriptor, Object target, BaseTask task) {
+        this.listener = listener;
         this.classDescriptor = classDescriptor;
         this.target = target;
         this.task = task;
